@@ -5,7 +5,7 @@
 version
 
 def write_new_database [path: string] {
-    stor create --table-name statuses --columns {idx: int, date: str, status: str, hide: bool}
+    stor create --table-name statuses --columns {idx: int, date: str, status: str, hide: bool, datestamp: int}
     stor export --file-name $path
 }
 
@@ -51,12 +51,14 @@ def write_status [
     let status_app_db_path = $"($status_app_dir_path)/($env.USER).db"
     stor import --file-name $status_app_db_path
     let db = (stor open).statuses
+    let now = date now
     let new_id = ([...$db.idx -1] | math max) + 1
-    let new_date = date now | format date "%A, %b %d, %Y"
+    let new_date = $now | format date "%A, %b %d, %Y"
     let new_status = $status
     let new_hide = false
-    stor insert --table-name statuses --data-record {idx: $new_id, date: $new_date, status: $new_status, hide: $new_hide}
-    mv $status_app_db_path $"($status_app_db_path).backup"
+    let new_datestamp = $now | format date "%Y%m%d"
+    stor insert --table-name statuses --data-record {idx: $new_id, date: $new_date, status: $new_status, hide: $new_hide, datestamp: $new_datestamp}
+    mv --force $status_app_db_path $"($status_app_db_path).backup"
     stor export --file-name $status_app_db_path
 }
 
