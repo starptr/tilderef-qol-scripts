@@ -56,7 +56,7 @@ def write_status [
     let new_date = $now | format date "%A, %b %d, %Y"
     let new_status = $status
     let new_hide = false
-    let new_datestamp = $now | format date "%Y%m%d"
+    let new_datestamp = $now | format date "%Y%m%d%H%M%S"
     stor insert --table-name statuses --data-record {idx: $new_id, date: $new_date, status: $new_status, hide: $new_hide, datestamp: $new_datestamp}
     mv --force $status_app_db_path $"($status_app_db_path).backup"
     stor export --file-name $status_app_db_path
