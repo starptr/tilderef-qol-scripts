@@ -53,7 +53,7 @@ def write_status [
     let db = (stor open).statuses
     let now = date now
     let new_id = ([...$db.idx -1] | math max) + 1
-    let new_date = $now | format date "%A, %b %d, %Y"
+    let new_date = $now | format date "%A, %b %d, %Y. %l:%M%P"
     let new_status = $status
     let new_hide = false
     let new_datestamp = $now | format date "%Y%m%d%H%M%S"
